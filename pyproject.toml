@@ -1,0 +1,51 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "telegram-to-max-reliable-pipeline"
+version = "0.1.0"
+description = "Reliability core Telegram→MAX SaaS: resource pool, idempotency и import job recovery"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "aiosqlite>=0.20,<1",
+  "fastapi>=0.115,<1",
+  "pydantic>=2.10,<3",
+  "sqlalchemy[asyncio]>=2.0,<3",
+  "uvicorn>=0.34,<1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "bandit>=1.8,<2",
+  "httpx>=0.28,<1",
+  "mypy>=1.14,<2",
+  "pytest>=8.3,<9",
+  "pytest-asyncio>=0.25,<1",
+  "pytest-cov>=6,<8",
+  "ruff>=0.9,<1",
+]
+
+[project.scripts]
+reliable-pipeline = "reliable_pipeline.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/reliable_pipeline"]
+
+[tool.pytest.ini_options]
+addopts = "-q --cov=reliable_pipeline --cov-report=term-missing --cov-fail-under=85"
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+packages = ["reliable_pipeline"]
